@@ -2,7 +2,7 @@ import './App.css';
 import Logo from './components/Logo/Logo';
 import ImageLink from './components/ImageLink/ImageLink';
 import Profile from './components/Profile/Profile';
-import Signin from './components/signin/Signin';
+import Signin from './components/signin/SignIn';
 import Register from './components/Register/Register';
 import FaceDetect from './components/FaceDetect/FaceDetect';
 import React, { Component } from 'react';
