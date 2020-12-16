@@ -2,7 +2,7 @@ import './App.css';
 import Logo from './components/Logo/Logo';
 import ImageLink from './components/ImageLink/ImageLink';
 import Profile from './components/Profile/Profile';
-import Signin from './components/signin/SignIn';
+import Signin from './components/signin/signin';
 import Register from './components/Register/Register';
 import FaceDetect from './components/FaceDetect/FaceDetect';
 import React, { Component } from 'react';
@@ -22,8 +22,26 @@ class App extends Component{
       imageurl: '',
       box: {},
       route: 'signin',
-      isSignedIn: false
+      isSignedIn: false,
+      user: {
+        id: '',
+        name: '',
+        email: '',
+        password: '',
+        entries: 0,
+        joined: ''
+      }
     }
+  }
+
+  loadUser = (data) => {
+    this.setState({user: {
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      entries: data.entries,
+      joined: data.joined
+    }});
   }
 
   calculateFaceLoc = (data) =>{
@@ -51,8 +69,23 @@ class App extends Component{
 
   onButtonSubmit = () => {
     this.setState({imageurl: this.state.input});
-    app.models.predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
-      .then(response => this.displayFaceBox(this.calculateFaceLoc(response)))
+    app.models.predict( Clarifai.FACE_DETECT_MODEL, this.state.input)
+      .then(response => {
+        if(response){
+          fetch('http://localhost:3000/image', {
+            method: 'put',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({
+            id: this.state.user.id
+          })
+        })
+        .then(response => response.json())
+        .then(count => {
+          this.setState(Object.assign(this.state.user, {entries: count}))
+        })
+      }
+        this.displayFaceBox(this.calculateFaceLoc(response))
+      })
       .catch(err => console.log(err));
   }
 
@@ -72,7 +105,10 @@ class App extends Component{
         {route === 'home'
           ?<div>
             <Logo />       
-            <Profile/>
+            <Profile
+              name={this.state.user.name}
+              entries={this.state.user.entries}
+            />
             <SignOut isSignedIn ={isSignedIn} onRouteChange={this.onRouteChange} />
             <ImageLink 
               onInputChange={this.onInputChange} 
@@ -83,8 +119,8 @@ class App extends Component{
         : (
            route === 'signin'
            ?
-          <Signin onRouteChange={this.onRouteChange}/>
-            :<Register onRouteChange={this.onRouteChange}/>
+          <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
+            :<Register loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
         )
       }
         </div>
