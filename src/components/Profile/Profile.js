@@ -1,14 +1,16 @@
 import React from 'react';
 
-const Profile = () => {
-        return(
-        <div>
-            <p className="f3">
-                {'Welcome User, your rank is'}
-            </p>
-            <h2>{'#1'}</h2>
-        </div>
-        );
-    }
+const Profile = ({ name, entries }) => {
+  return (
+    <div>
+      <div className='white f3'>
+        {`${name}, your current entry count is...`}
+      </div>
+      <div className='white f1'>
+        {entries}
+      </div>
+    </div>
+  );
+}
 
 export default Profile;

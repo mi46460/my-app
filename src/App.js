@@ -34,6 +34,7 @@ class App extends Component{
     }
   }
 
+
   loadUser = (data) => {
     this.setState({user: {
       id: data.id,
@@ -119,7 +120,7 @@ class App extends Component{
         : (
            route === 'signin'
            ?
-          <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
+          <Signin onRouteChange={this.onRouteChange}/>
             :<Register loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
         )
       }
