@@ -2,6 +2,15 @@
   text-align: center;
 }
 
+.box{
+  padding: 100px;
+  padding-top: 0;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  background: rgba(255, 255, 255, 0.233);
+}
+
 .center{
   display: flex;
   justify-content: center;
@@ -21,6 +30,10 @@
   border-radius: 20px;
 }
 
+.canvas{
+  border: 3px dashed #292B2F;
+}
+
 .show-button{
   border:0;
   font-size: 16px;
@@ -34,8 +47,32 @@
   border-radius: 20px;
 }
 
+.choose{
+  position:relative;
+  display:inline-block;
+  border:0;
+  font-size: 16px;
+  text-decoration: none;
+  background: none;
+  text-align: center;
+  border: 2px solid rgba(68, 68, 245, 0.5);
+  padding: 3px 10px 3px 10px;
+  outline: none;
+  color: rgb(0, 0, 0);
+  border-radius: 20px;
+}
+.choose input[type="file"]{
+  -webkit-appearance:none; 
+  position:absolute;
+  top:0; left:0;
+  opacity:0; 
+  width: 75px;
+}
+
 .form-link{
+  margin-left:10px;
   width: 300px;
+  padding-left: 5px;
 }
 .App-logo {
   height: 40vmin;
@@ -70,4 +107,17 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+body{
+  background-color: #292B2F;
+}
+
+.Particles{
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: -1;
 }

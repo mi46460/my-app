@@ -9,13 +9,17 @@ const ImageLink = ( {onInputChange, onButtonSubmit} ) => {
             <div>
                 <p>{'You can browse from your local computer or use the link'}</p>
                 <div className='center'>
-                    <button className='browse-button'>Browse</button>
+                    <div className='choose'>
+                        <span>Browse</span>
+                        <input className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100 white" id="iniinputan" type='file' onChange={onInputChange}/>
+                    </div>
                     <input className='form-link' type='text' onChange={onInputChange}/>
                 </div>
-            <button className='show-button'  onClick={onButtonSubmit}>Detect!</button>
+            <button className='show-button mt2 mb4'  onClick={onButtonSubmit}>Detect!</button>
             </div>
+            
         </div>
+        
     );
 }
-
 export default ImageLink;

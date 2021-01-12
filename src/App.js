@@ -9,10 +9,13 @@ import React, { Component } from 'react';
 import Clarifai from 'clarifai';
 import 'tachyons';
 import SignOut from './components/SignOut/SignOut';
+import Particles from 'react-particles-js'; 
 
 const app = new Clarifai.App({
  apiKey: '701440986a294867b11fa1457cb41fa1'
 });
+
+const url = "http://localhost:3001";
 
 class App extends Component{
   constructor(){
@@ -20,6 +23,7 @@ class App extends Component{
     this.state = {
       input: '',
       imageurl: '',
+      img: '',
       box: {},
       route: 'signin',
       isSignedIn: false,
@@ -34,7 +38,6 @@ class App extends Component{
     }
   }
 
-
   loadUser = (data) => {
     this.setState({user: {
       id: data.id,
@@ -46,7 +49,6 @@ class App extends Component{
   }
 
   calculateFaceLoc = (data) =>{
-    
     const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
     const image = document.getElementById('inputimage');
     const width = Number(image.width);
@@ -65,7 +67,23 @@ class App extends Component{
   }
 
   onInputChange = (event) => {
-    this.setState({input: event.target.value})
+    if (event.target.files) {
+      const files = Array.from(event.target.files);
+      const formData = new FormData();
+      files.forEach((file, i) => {
+        formData.append(i, file)
+      })
+      fetch(`${url}/image`, {
+        method: 'POST',
+        body: formData
+      })
+        .then(res => res.json())
+        .then(images => {
+          this.setState({ input: images[0].url});
+        })
+    } else {
+      this.setState({ input: event.target.value});
+    }
   }
 
   onButtonSubmit = () => {
@@ -73,7 +91,7 @@ class App extends Component{
     app.models.predict( Clarifai.FACE_DETECT_MODEL, this.state.input)
       .then(response => {
         if(response){
-          fetch('http://localhost:3000/image', {
+          fetch(url + "/image", {
             method: 'put',
             headers: {'Content-Type':'application/json'},
             body: JSON.stringify({
@@ -103,19 +121,50 @@ class App extends Component{
     const { isSignedIn, imageurl, route, box} = this.state;
     return (
       <div className="App">
+        <Particles className='Particles'
+          params={{
+            "particles": {
+                "number": {
+                    "value": 200,
+                    "density": {
+                        "enable": false
+                    }
+                },
+                "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": {
+                        "speed": 4,
+                        "size_min": 0.3
+                    }
+                },
+                "line_linked": {
+                    "enable": false
+                },
+                "move": {
+                    "random": true,
+                    "speed": 1,
+                    "direction": "top",
+                    "out_mode": "out"
+                }
+            }
+        }} />
+
         {route === 'home'
           ?<div>
-            <Logo />       
-            <Profile
-              name={this.state.user.name}
-              entries={this.state.user.entries}
-            />
-            <SignOut isSignedIn ={isSignedIn} onRouteChange={this.onRouteChange} />
-            <ImageLink 
-              onInputChange={this.onInputChange} 
-              onButtonSubmit={this.onButtonSubmit}
-            />
-            <FaceDetect box={box} imgurl={imageurl}/>
+            <div className="box">
+              <Logo />       
+              <Profile
+                name={this.state.user.name}
+                entries={this.state.user.entries}
+                />
+              <SignOut isSignedIn ={isSignedIn} onRouteChange={this.onRouteChange} />
+              <ImageLink 
+                onInputChange={this.onInputChange} 
+                onButtonSubmit={this.onButtonSubmit}
+                />
+              <FaceDetect box={box} imgurl={imageurl}/>
+              </div>
           </div>
         : (
            route === 'signin'
